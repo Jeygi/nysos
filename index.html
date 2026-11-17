@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Coming Soon - Nysos</title>
+<link rel="icon" href="./favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ✅ CORRECT -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+    text-align: center;
+    background: #0d2d73; /* fallback */
+}
+
+/* canvas */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* contenu centré */
+.container {
+    position: relative;
+    z-index: 2;
+    top: 50%;
+    transform: translateY(50%);
+}
+
+/* logo */
+.logo {
+    width: 90px;
+    margin-bottom: 20px;
+}
+
+/* texte */
+.title {
+    font-size: 30px;
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+.subtitle {
+    font-size: 20px;
+    font-weight: 300;
+}
+
+/* ligne */
+.line {
+    width: 120px;
+    height: 2px;
+    background: white;
+    margin: 20px auto;
+    opacity: 0.5;
+}
+
+/* loader */
+.loader {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.loader::after {
+    content: "";
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0% {content:"";}
+    25% {content:".";}
+    50% {content:"..";}
+    75% {content:"...";}
+}
+
+/* icones */
+.icons {
+    margin-top: 30px;
+}
+
+.icons a {
+    color: white;
+    margin: 0 12px;
+    font-size: 22px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="network"></canvas>
+
+<div class="container">
+
+    <!-- ✅ LOGO FIXÉ -->
+    <img src="picto.png" class="logo">
+
+    <div class="title">TECH FOR AMBITIONS</div>
+    <div class="subtitle">HUMAN FOR ACTIONS</div>
+
+    <div class="line"></div>
+
+    <div class="loader">Coming soon</div>
+
+    <div class="icons">
+        <a href="mailto:christophe.denis@cronos.be"><i class="fas fa-envelope"></i></a>
+        <a href="https://www.linkedin.com/company/dionyslux/"><i class="fab fa-linkedin"></i></a>
+        <a href="tel:+32474742040"><i class="fas fa-phone"></i></a>
+    </div>
+
+</div>
+
+<script>
+const canvas = document.getElementById("network");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+const nb = 60;
+
+for (let i = 0; i < nb; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5),
+        vy: (Math.random() - 0.5)
+    });
+}
+
+function draw() {
+    ctx.fillStyle = "#0d2d73";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (let i = 0; i < nb; i++) {
+        let p = particles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "white";
+        ctx.fill();
+
+        for (let j = i + 1; j < nb; j++) {
+            let p2 = particles[j];
+            let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+
+            if (dist < 100) {
+                ctx.strokeStyle = "rgba(255,255,255," + (1 - dist/100) + ")";
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        }
+    }
+
+    requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+</body>
+</html>
